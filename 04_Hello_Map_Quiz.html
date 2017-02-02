@@ -5,12 +5,33 @@ API Course, Lesson 1 -->
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
    <style type="text/css">
      html, body { height: 100%; margin: 0; padding: 0; }
-     #map { height: 100%; }
+     .container {
+      display: flex;
+      flex-wrap: wrap;
+     }
+     #map { 
+      align-self: right;
+      height: 100%; 
+      width: 80%;
+      margin: 0;
+    }
+     .options-box {
+      width: 16%;
+      padding: 2%;
+     }
    </style>
  </head>
  <body>
-   <!-- TODO 1: Create a place to put the map in the HTML-->
-   <div id="map"></div>
+   <div class="container">
+     <div class="options-box">
+       <h1>Ann Arbor</h1>
+       <div>
+         <input type="button" id="show-listings" value="Show Listings">
+         <input type="button" id="hide-listings" value="Hide Listings">
+       </div>
+     </div>
+     <div id="map"></div>
+   </div>
    <script>
     var map;
     var markers = [];
@@ -47,36 +68,55 @@ API Course, Lesson 1 -->
       ];
 
       var largeInfowindow = new google.maps.InfoWindow();
-
-      for(var i = 0; i < 3; i++){
-        var location = locations[i].location;
+      for(var i = 0; i < locations.length; i++){
+        var position = locations[i].location;
             title = locations[i].title;
             content = locations[i].content;
         var marker = new google.maps.Marker({
-          position: location,
-          map: map,
+          position: position,
           title: title,
           content: content,
           animation: google.maps.Animation.DROP,
           id: i
         }); 
         markers.push(marker);
+        // bounds.extend(marker.position)
         marker.addListener('click', function () {
           populateInfoWindow(this, largeInfowindow);
         });
       }
-    }
 
-      function populateInfoWindow (marker, infowindow) {
-        if (infowindow.marker != marker){
-          infowindow.marker = marker;
-          infowindow.setContent('<div>' + marker.title + '<div><p>' + marker.content + '</p>');
-          infowindow.open(map, marker);
-          infowindow.addListener('closeclick', function(){
-            infowindow.setMarker(null);
-          });
+      document.getElementById('show-listings').addEventListener('click',showlistings);
+      document.getElementById('hide-listings').addEventListener('click',hidelistings);
+
+      function showlistings () {
+        var bounds = new google.maps.LatLngBounds();
+        // Extend the coundaries of the map for each marker and display the marker
+        for(var i = 0, length1 = markers.length; i < length1; i++){
+          markers[i].setMap(map);
+          bounds.extend(markers[i].position);
         }
+        map.fitBounds(bounds);
       }
+
+      function hidelistings (argument) {
+        for(var i = 0, length1 = markers.length; i < length1; i++){
+           markers[i].setMap(null);
+         } 
+      }
+
+    };
+
+    function populateInfoWindow (marker, infowindow) {
+      if (infowindow.marker != marker){
+        infowindow.marker = marker;
+        infowindow.setContent('<div>' + marker.title + '<div><p>' + marker.content + '</p>');
+        infowindow.open(map, marker);
+        infowindow.addListener('closeclick', function(){
+          infowindow.setMarker(null);
+        });
+      }
+    }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
    <script async defer
