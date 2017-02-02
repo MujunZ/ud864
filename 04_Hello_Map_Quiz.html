@@ -35,13 +35,8 @@ API Course, Lesson 1 -->
    <script>
     var map;
     var markers = [];
-    function initMap () {
-      map = new google.maps.Map(document.getElementById('map'),{
-        center: {lat: 42.25, lng: -83.698},
-        zoom: 12
-      });
 
-      var locations = [{
+    var locations = [{
                title:'Godaiko Japanese Restaurant',
                location:{
                   lat:42.2409745,
@@ -67,7 +62,119 @@ API Course, Lesson 1 -->
             }
       ];
 
+      var styles = [
+   {
+      "elementType":"labels",
+      "stylers":[
+         {
+            "visibility":"off"
+         }
+      ]
+   },
+   {
+      "featureType":"road",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#0F0919"
+         }
+      ]
+   },
+   {
+      "featureType":"water",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#E4F7F7"
+         }
+      ]
+   },
+   {
+      "elementType":"geometry.stroke",
+      "stylers":[
+         {
+            "visibility":"off"
+         }
+      ]
+   },
+   {
+      "featureType":"poi.park",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#002FA7"
+         }
+      ]
+   },
+   {
+      "featureType":"poi.attraction",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#E60003"
+         }
+      ]
+   },
+   {
+      "featureType":"landscape",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#FBFCF4"
+         }
+      ]
+   },
+   {
+      "featureType":"poi.business",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#FFED00"
+         }
+      ]
+   },
+   {
+      "featureType":"poi.government",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#D41C1D"
+         }
+      ]
+   },
+   {
+      "featureType":"poi.school",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "color":"#BF0000"
+         }
+      ]
+   },
+   {
+      "featureType":"transit.line",
+      "elementType":"geometry.fill",
+      "stylers":[
+         {
+            "saturation":-100
+         }
+      ]
+   }
+];
+
+    function initMap () {
+      map = new google.maps.Map(document.getElementById('map'),{
+        center: {lat: 42.25, lng: -83.698},
+        styles: styles,
+        mapTypeControl: false,
+        zoom: 12
+      });
+
       var largeInfowindow = new google.maps.InfoWindow();
+
+      // var defaultIcon = makeMarkerIcon('002FA7');
+      // var highlightedIcon = makeMarkerIcon('FFED00');
+
       for(var i = 0; i < locations.length; i++){
         var position = locations[i].location;
             title = locations[i].title;
@@ -75,6 +182,7 @@ API Course, Lesson 1 -->
         var marker = new google.maps.Marker({
           position: position,
           title: title,
+          icon: 'http://icons.iconarchive.com/icons/designbolts/despicable-me-2/48/Minion-Hello-icon.png',
           content: content,
           animation: google.maps.Animation.DROP,
           id: i
@@ -113,7 +221,7 @@ API Course, Lesson 1 -->
         infowindow.setContent('<div>' + marker.title + '<div><p>' + marker.content + '</p>');
         infowindow.open(map, marker);
         infowindow.addListener('closeclick', function(){
-          infowindow.setMarker(null);
+          infowindow.close(); 
         });
       }
     }
